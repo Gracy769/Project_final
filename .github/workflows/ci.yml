@@ -1,0 +1,50 @@
+name: CI — Validate Project
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint-markdown:
+    name: Lint README links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'no'
+          config-file: '.github/mlc_config.json'
+          folder-path: '.'
+
+  validate-yaml:
+    name: Lint workflow YAML
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate YAML syntax
+        run: |
+          find .github/workflows -name '*.yml' | while read f; do
+            python3 -c "import yaml, sys; yaml.safe_load(open('$f'))" \
+              && echo "OK: $f" \
+              || { echo "FAIL: $f"; exit 1; }
+          done
+
+  badge-update-dry-run:
+    name: Badge update dry-run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test date-badge regex
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          sed "s/Last%20Verified-[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/Last%20Verified-${TODAY}/g" \
+            README.md > /tmp/readme_test.md
+          grep -o "Last%20Verified-[0-9-]*" /tmp/readme_test.md
+          echo "Badge update dry-run passed for date: ${TODAY}"
