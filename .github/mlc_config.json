@@ -1,0 +1,12 @@
+{
+  "ignorePatterns": [
+    { "pattern": "^https://capsule-render\\.vercel\\.app" },
+    { "pattern": "^https://readme-typing-svg\\.demolab\\.com" },
+    { "pattern": "^https://img\\.shields\\.io" },
+    { "pattern": "^https://git\\.io/typing-svg" }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s"
+}
