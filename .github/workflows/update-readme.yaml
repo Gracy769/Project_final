@@ -1,0 +1,38 @@
+name: Update README Last-Verified Date
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'  # Every Monday at 03:00 UTC
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update last-verified date in README
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          sed -i "s/Last%20Verified-[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/Last%20Verified-${TODAY}/g" README.md
+          echo "Updated last-verified badge to ${TODAY}"
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet README.md || \
+            (git add README.md && \
+             git commit -m "chore: update last-verified date to $(date +%Y-%m-%d) [skip ci]")
+
+      - name: Push
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
