@@ -4,7 +4,9 @@
     { "pattern": "^https://readme-typing-svg\\.demolab\\.com" },
     { "pattern": "^https://img\\.shields\\.io" },
     { "pattern": "^https://git\\.io/typing-svg" },
-    { "pattern": "^https://raw\\.githubusercontent\\.com/espressif/arduino-esp32" }
+    { "pattern": "^https://raw\\.githubusercontent\\.com/espressif/arduino-esp32" },
+    { "pattern": "^https://canaan-creative\\.com" },
+    { "pattern": "^https://kendryte\\.com" }
   ],
   "timeout": "20s",
   "retryOn429": true,
